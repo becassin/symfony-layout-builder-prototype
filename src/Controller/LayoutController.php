@@ -165,6 +165,18 @@ class LayoutController extends AbstractController
                     $blockIds = json_decode($request->request->get('blockIds', '[]'), true);
                     $layoutBuilder->reorderBlocks($layout, $blockIds);
                     break;
+                    
+                case 'reset_to_default':
+                    // Delete the custom layout and all its blocks
+                    foreach ($layout->getBlocks() as $block) {
+                        $entityManager->remove($block);
+                    }
+                    $entityManager->remove($layout);
+                    $entityManager->flush();
+                    
+                    // Redirect back to the author page (which will now use the default layout)
+                    return $this->redirectToRoute('app_author_show', ['id' => $entityId]);
+                    break;
             }
             
             return $this->redirectToRoute('app_layout_entity_edit', ['entityType' => $entityType, 'entityId' => $entityId]);

@@ -20,9 +20,12 @@
             <div class="card-body">
                 <div id="layout-builder" class="layout-builder">
                     {% for block in layout.blocks %}
-                        <div class="layout-block mb-3 p-3 border rounded" data-block-id="{{ block.id }}">
+                        <div class="layout-block mb-3 p-3 border rounded draggable-block" data-block-id="{{ block.id }}" draggable="true">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="block-content">
+                                    <div class="drag-handle text-muted mb-2">
+                                        <i class="fas fa-grip-vertical"></i> Drag to reorder
+                                    </div>
                                     {% set blockType = blockTypes[block.blockType] %}
                                     {% if blockType %}
                                         <h6>{{ blockType.label }}</h6>
@@ -79,6 +82,12 @@
                     This is a specific layout for {{ entityType }} #{{ entityId }}. 
                     Changes here will only affect this {{ entityType|lower }}.
                 </p>
+                <form method="post" onsubmit="return confirm('Are you sure you want to reset to the default layout? This will delete all custom changes for this {{ entityType|lower }}.')">
+                    <input type="hidden" name="action" value="reset_to_default">
+                    <button type="submit" class="btn btn-warning btn-sm">
+                        <i class="fas fa-undo"></i> Reset to Default Layout
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -92,10 +101,31 @@
 .layout-block {
     background: #f8f9fa;
     border: 2px dashed #dee2e6 !important;
+    cursor: move;
+    transition: all 0.3s ease;
 }
 
 .layout-block:hover {
     border-color: #007bff !important;
+}
+
+.layout-block.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.layout-block.drag-over {
+    border-color: #28a745 !important;
+    background-color: #d4edda;
+}
+
+.drag-handle {
+    font-size: 0.8em;
+    cursor: grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
 }
 
 .block-preview {
@@ -115,4 +145,110 @@
     border-bottom: none;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const layoutBuilder = document.getElementById('layout-builder');
+    let draggedElement = null;
+    let draggedOverElement = null;
+
+    // Add event listeners to all draggable blocks
+    function addDragListeners() {
+        const blocks = document.querySelectorAll('.draggable-block');
+        blocks.forEach(block => {
+            block.addEventListener('dragstart', handleDragStart, false);
+            block.addEventListener('dragend', handleDragEnd, false);
+            block.addEventListener('dragover', handleDragOver, false);
+            block.addEventListener('dragenter', handleDragEnter, false);
+            block.addEventListener('dragleave', handleDragLeave, false);
+            block.addEventListener('drop', handleDrop, false);
+        });
+    }
+
+    function handleDragStart(e) {
+        draggedElement = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', this.dataset.blockId);
+        console.log('Drag started:', this.dataset.blockId);
+    }
+
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+        // Remove drag-over class from all elements
+        document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        draggedElement = null;
+        draggedOverElement = null;
+        console.log('Drag ended');
+    }
+
+    function handleDragEnter(e) {
+        e.preventDefault();
+        if (this !== draggedElement) {
+            this.classList.add('drag-over');
+            draggedOverElement = this;
+        }
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+
+    function handleDragLeave(e) {
+        // Only remove drag-over if we're actually leaving the element
+        if (!this.contains(e.relatedTarget)) {
+            this.classList.remove('drag-over');
+        }
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('drag-over');
+        
+        console.log('Drop on:', this.dataset.blockId);
+        
+        if (draggedElement && draggedElement !== this) {
+            console.log('Moving block from', draggedElement.dataset.blockId, 'to before', this.dataset.blockId);
+            
+            // Insert the dragged element before the drop target
+            layoutBuilder.insertBefore(draggedElement, this);
+            
+            // Save the new order
+            saveBlockOrder();
+        }
+        
+        return false;
+    }
+
+    function saveBlockOrder() {
+        const blocks = document.querySelectorAll('.draggable-block');
+        const blockIds = Array.from(blocks).map(block => block.dataset.blockId);
+        
+        console.log('Saving block order:', blockIds);
+        
+        // Send AJAX request to save the new order
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=reorder_blocks&blockIds=' + encodeURIComponent(JSON.stringify(blockIds))
+        }).then(response => {
+            if (response.ok) {
+                console.log('Block order saved successfully');
+            } else {
+                console.error('Failed to save block order');
+            }
+        }).catch(error => {
+            console.error('Error saving block order:', error);
+        });
+    }
+
+    // Initialize drag and drop
+    addDragListeners();
+});
+</script>
 {% endblock %}
