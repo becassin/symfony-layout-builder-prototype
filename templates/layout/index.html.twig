@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Layouts{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Layouts</h1>
+    <a href="{{ path('app_layout_new') }}" class="btn btn-primary">Create new Layout</a>
+</div>
+
+<div class="row">
+    {% for layout in layouts %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ layout.name }}</h5>
+                    <p class="card-text">
+                        <strong>Type:</strong> {{ layout.entityType ?? 'Generic' }}<br>
+                        <strong>Blocks:</strong> {{ layout.blocks|length }}<br>
+                        <strong>Default:</strong> {{ layout.isDefault ? 'Yes' : 'No' }}
+                    </p>
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_layout_show', {'id': layout.id}) }}" class="btn btn-outline-primary btn-sm">View</a>
+                        <a href="{{ path('app_layout_edit', {'id': layout.id}) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>No layouts found</h4>
+                <p>Get started by creating your first layout.</p>
+                <a href="{{ path('app_layout_new') }}" class="btn btn-primary">Create Layout</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

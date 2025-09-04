@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Layout{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Create new Layout</h1>
+    <a href="{{ path('app_layout_index') }}" class="btn btn-secondary">Back to list</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Layout Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="entityType" class="form-label">Entity Type (optional)</label>
+                        <select class="form-control" id="entityType" name="entityType">
+                            <option value="">Generic Layout</option>
+                            <option value="Author">Author</option>
+                            <option value="Book">Book</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="entityId" class="form-label">Entity ID (optional)</label>
+                        <input type="number" class="form-control" id="entityId" name="entityId">
+                        <div class="form-text">Leave empty for default layout</div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="isDefault" name="isDefault" value="1">
+                        <label class="form-check-label" for="isDefault">
+                            Set as default layout for this entity type
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('app_layout_index') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Create Layout</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

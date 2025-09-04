@@ -11,47 +11,53 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Author Details</h5>
-                <table class="table">
-                    <tr>
-                        <th>Name</th>
-                        <td>{{ author.name }}</td>
-                    </tr>
-                    <tr>
-                        <th>City</th>
-                        <td>{{ author.city }}</td>
-                    </tr>
-                    <tr>
-                        <th>Number of Books</th>
-                        <td>{{ author.books|length }}</td>
-                    </tr>
-                </table>
+{% if renderedLayout %}
+    <div class="layout-content">
+        {{ renderedLayout|raw }}
+    </div>
+{% else %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Author Details</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ author.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>City</th>
+                            <td>{{ author.city }}</td>
+                        </tr>
+                        <tr>
+                            <th>Number of Books</th>
+                            <td>{{ author.books|length }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Books by {{ author.name }}</h5>
+                    {% if author.books|length > 0 %}
+                        <ul class="list-group list-group-flush">
+                            {% for book in author.books %}
+                                <li class="list-group-item">
+                                    <a href="{{ path('app_book_show', {'id': book.id}) }}" class="text-decoration-none">
+                                        {{ book.title }} ({{ book.year }})
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No books found for this author.</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Books by {{ author.name }}</h5>
-                {% if author.books|length > 0 %}
-                    <ul class="list-group list-group-flush">
-                        {% for book in author.books %}
-                            <li class="list-group-item">
-                                <a href="{{ path('app_book_show', {'id': book.id}) }}" class="text-decoration-none">
-                                    {{ book.title }} ({{ book.year }})
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-muted">No books found for this author.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Configure Block{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Configure {{ blockType.label }}</h1>
+    <a href="{{ path('app_layout_edit', {'id': block.layout.id}) }}" class="btn btn-secondary">Back to Layout</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <a href="{{ path('app_layout_edit', {'id': block.layout.id}) }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Configuration</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
