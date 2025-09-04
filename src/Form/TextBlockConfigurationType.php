@@ -16,12 +16,12 @@ class TextBlockConfigurationType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Title',
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Use {{author.name}} for dynamic author name']
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Use {{page.title}}, {{author.name}} for dynamic content']
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Content',
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'rows' => 5, 'placeholder' => 'Use {{author.name}}, {{author.city}}, {{author.books_count}} for dynamic content']
+                'attr' => ['class' => 'form-control', 'rows' => 5, 'placeholder' => 'Use {{page.title}}, {{page.excerpt}}, {{author.name}}, {{author.city}} for dynamic content']
             ])
             ->add('css_class', TextType::class, [
                 'label' => 'CSS Class',

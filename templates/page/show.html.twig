@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ page.title }}</h1>
+    <div>
+        <a href="{{ path('app_page_edit', {'id': page.id}) }}" class="btn btn-primary me-2">Edit</a>
+        <a href="{{ path('app_layout_entity_edit', {'entityType': 'Page', 'entityId': page.id}) }}" class="btn btn-info me-2">Layout</a>
+        {% if page.published %}
+            <a href="{{ path('app_page_public', {'slug': page.slug}) }}" class="btn btn-success me-2" target="_blank">View Public</a>
+        {% endif %}
+        <a href="{{ path('app_page_index') }}" class="btn btn-secondary">Back to list</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        {% if renderedLayout %}
+            <div class="layout-content">
+                {{ renderedLayout|raw }}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Page Content</h5>
+                    <p class="text-muted">No layout configured for this page. <a href="{{ path('app_layout_entity_edit', {'entityType': 'Page', 'entityId': page.id}) }}">Create a layout</a> to add content.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Page Details</h5>
+                <table class="table">
+                    <tr>
+                        <th>Title</th>
+                        <td>{{ page.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Slug</th>
+                        <td>{{ page.slug }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span class="badge {{ page.published ? 'bg-success' : 'bg-secondary' }}">
+                                {{ page.published ? 'Published' : 'Draft' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>{{ page.createdAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                    {% if page.updatedAt %}
+                        <tr>
+                            <th>Updated</th>
+                            <td>{{ page.updatedAt|date('Y-m-d H:i') }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if page.publishedAt %}
+                        <tr>
+                            <th>Published</th>
+                            <td>{{ page.publishedAt|date('Y-m-d H:i') }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+                
+                {% if page.excerpt %}
+                    <h6>Excerpt</h6>
+                    <p class="text-muted">{{ page.excerpt }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

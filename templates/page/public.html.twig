@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    {% if renderedLayout %}
+        <div class="layout-content">
+            {{ renderedLayout|raw }}
+        </div>
+    {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h1>{{ page.title }}</h1>
+                        {% if page.excerpt %}
+                            <p class="lead">{{ page.excerpt }}</p>
+                        {% endif %}
+                        <p class="text-muted">No layout configured for this page.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

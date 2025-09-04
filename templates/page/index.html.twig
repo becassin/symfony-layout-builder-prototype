@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pages{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pages</h1>
+    <a href="{{ path('app_page_new') }}" class="btn btn-primary">Create new Page</a>
+</div>
+
+<div class="row">
+    {% for page in pages %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ page.title }}</h5>
+                    <p class="card-text">
+                        <strong>Slug:</strong> {{ page.slug }}<br>
+                        <strong>Status:</strong> 
+                        <span class="badge {{ page.published ? 'bg-success' : 'bg-secondary' }}">
+                            {{ page.published ? 'Published' : 'Draft' }}
+                        </span><br>
+                        <strong>Created:</strong> {{ page.createdAt|date('Y-m-d H:i') }}
+                    </p>
+                    {% if page.excerpt %}
+                        <p class="card-text text-muted">{{ page.excerpt|slice(0, 100) }}{% if page.excerpt|length > 100 %}...{% endif %}</p>
+                    {% endif %}
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_page_show', {'id': page.id}) }}" class="btn btn-outline-primary btn-sm">View</a>
+                        <a href="{{ path('app_page_edit', {'id': page.id}) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <a href="{{ path('app_layout_entity_edit', {'entityType': 'Page', 'entityId': page.id}) }}" class="btn btn-outline-info btn-sm">Layout</a>
+                        {% if page.published %}
+                            <a href="{{ path('app_page_public', {'slug': page.slug}) }}" class="btn btn-outline-success btn-sm" target="_blank">Public</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>No pages found</h4>
+                <p>Get started by creating your first page.</p>
+                <a href="{{ path('app_page_new') }}" class="btn btn-primary">Create Page</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

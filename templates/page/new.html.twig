@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Page{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Create new Page</h1>
+    <a href="{{ path('app_page_index') }}" class="btn btn-secondary">Back to list</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <div class="mb-3">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.slug) }}
+                        {{ form_widget(form.slug) }}
+                        {{ form_help(form.slug) }}
+                        {{ form_errors(form.slug) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.excerpt) }}
+                        {{ form_widget(form.excerpt) }}
+                        {{ form_errors(form.excerpt) }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form_widget(form.published) }}
+                        {{ form_label(form.published) }}
+                        {{ form_errors(form.published) }}
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ path('app_page_index') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button class="btn btn-primary">{{ button_label|default('Create') }}</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
