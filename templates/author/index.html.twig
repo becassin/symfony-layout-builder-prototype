@@ -21,6 +21,7 @@
                     <div class="btn-group" role="group">
                         <a href="{{ path('app_author_show', {'id': author.id}) }}" class="btn btn-outline-primary btn-sm">View</a>
                         <a href="{{ path('app_author_edit', {'id': author.id}) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <a href="{{ path('app_layout_entity_edit', {'entityType': 'Author', 'entityId': author.id}) }}" class="btn btn-outline-info btn-sm">Layout</a>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Layout for {{ entityType }} #{{ entityId }}{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Edit Layout for {{ entityType }} #{{ entityId }}</h1>
+    <div>
+        <a href="{{ path('app_author_show', {'id': entityId}) }}" class="btn btn-secondary">Back to {{ entityType }}</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Layout Builder</h5>
+                <small class="text-muted">This layout is specific to {{ entityType }} #{{ entityId }}</small>
+            </div>
+            <div class="card-body">
+                <div id="layout-builder" class="layout-builder">
+                    {% for block in layout.blocks %}
+                        <div class="layout-block mb-3 p-3 border rounded" data-block-id="{{ block.id }}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="block-content">
+                                    {% set blockType = blockTypes[block.blockType] %}
+                                    {% if blockType %}
+                                        <h6>{{ blockType.label }}</h6>
+                                        <div class="block-preview">
+                                            {{ blockType.render(block.configuration)|raw }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="block-actions">
+                                    <a href="{{ path('app_layout_block_configure', {'id': block.id}) }}" class="btn btn-sm btn-outline-primary">Configure</a>
+                                    <form method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this block?')">
+                                        <input type="hidden" name="action" value="remove_block">
+                                        <input type="hidden" name="blockId" value="{{ block.id }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <p>No blocks added yet. Add a block to get started.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Add Block</h5>
+            </div>
+            <div class="card-body">
+                {% for blockType in blockTypes %}
+                    <div class="block-type mb-3">
+                        <h6>{{ blockType.label }}</h6>
+                        <p class="text-muted small">{{ blockType.description }}</p>
+                        <form method="post">
+                            <input type="hidden" name="action" value="add_block">
+                            <input type="hidden" name="blockType" value="{{ blockType.type }}">
+                            <input type="hidden" name="configuration" value="{}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Add {{ blockType.label }}</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6>Layout Info</h6>
+                <p class="small text-muted">
+                    This is a specific layout for {{ entityType }} #{{ entityId }}. 
+                    Changes here will only affect this {{ entityType|lower }}.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.layout-builder {
+    min-height: 200px;
+}
+
+.layout-block {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6 !important;
+}
+
+.layout-block:hover {
+    border-color: #007bff !important;
+}
+
+.block-preview {
+    margin-top: 10px;
+}
+
+.block-actions {
+    margin-left: 10px;
+}
+
+.block-type {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+}
+
+.block-type:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

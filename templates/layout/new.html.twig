@@ -22,14 +22,14 @@
                         <label for="entityType" class="form-label">Entity Type (optional)</label>
                         <select class="form-control" id="entityType" name="entityType">
                             <option value="">Generic Layout</option>
-                            <option value="Author">Author</option>
-                            <option value="Book">Book</option>
+                            <option value="Author" {{ app.request.query.get('entityType') == 'Author' ? 'selected' : '' }}>Author</option>
+                            <option value="Book" {{ app.request.query.get('entityType') == 'Book' ? 'selected' : '' }}>Book</option>
                         </select>
                     </div>
                     
                     <div class="mb-3">
                         <label for="entityId" class="form-label">Entity ID (optional)</label>
-                        <input type="number" class="form-control" id="entityId" name="entityId">
+                        <input type="number" class="form-control" id="entityId" name="entityId" value="{{ app.request.query.get('entityId') }}">
                         <div class="form-text">Leave empty for default layout</div>
                     </div>
                     

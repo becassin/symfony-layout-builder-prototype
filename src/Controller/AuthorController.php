@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Author;
 use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
+use App\Repository\LayoutRepository;
 use App\Service\LayoutBuilderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,9 +45,14 @@ class AuthorController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_author_show', methods: ['GET'])]
-    public function show(Author $author, LayoutBuilderService $layoutBuilder): Response
+    public function show(Author $author, LayoutBuilderService $layoutBuilder, LayoutRepository $layoutRepository): Response
     {
         $layout = $layoutBuilder->getLayoutForEntity('Author', $author->getId());
+        
+        // If no specific layout found, get the default layout
+        if (!$layout) {
+            $layout = $layoutRepository->findDefaultForEntityType('Author');
+        }
         
         return $this->render('author/show.html.twig', [
             'author' => $author,
