@@ -33,8 +33,12 @@ services:
     App\Block\AuthorListBlockType:
         tags: ['app.block_type']
 
+    App\Block\AuthorInfoBlockType:
+        tags: ['app.block_type']
+
     App\Service\LayoutBuilderService:
         calls:
             - [registerBlockType, ['@App\Block\TextBlockType']]
             - [registerBlockType, ['@App\Block\ImageBlockType']]
             - [registerBlockType, ['@App\Block\AuthorListBlockType']]
+            - [registerBlockType, ['@App\Block\AuthorInfoBlockType']]
